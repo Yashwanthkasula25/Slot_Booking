@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings | Slot Booking System</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #526077;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --line: #dbe3ef;
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --danger: #c2410c;
+      --danger-dark: #9a3412;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      background-image:
+        radial-gradient(circle at 10% -20%, #bae6fd 0, transparent 34%),
+        radial-gradient(circle at 90% -10%, #bbf7d0 0, transparent 32%);
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.2px;
+    }
+    .logo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #334155;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: #ccfbf1;
+      color: var(--primary);
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px) scale(1.01); }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+    .btn-danger:hover { background: var(--danger-dark); }
+    .container {
+      max-width: 1100px;
+      margin: 34px auto;
+      padding: 0 20px 20px;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+      padding: 20px;
+      border: 1px solid var(--line);
+    }
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2.2vw, 2rem);
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      background: #f0fdfa;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    tbody tr:hover { background: #ecfeff; }
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+    }
+    @media (max-width: 700px) {
+      .container {
+        margin-top: 22px;
+      }
+      table {
+        min-width: 640px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo"><span class="logo-dot"></span>Slot Booking System</a>
+      <nav class="nav-links">
+        <a href="/">Slots</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'my_bookings' %}" class="active">My Bookings</a>
+        <form action="{% url 'logout' %}" method="post" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="/register/" class="btn btn-primary">Register</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="head">
+        <h1>My Bookings</h1>
+        <a href="/" class="btn btn-primary">Back to Slots</a>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Slot Time</th>
+              <th>Booked By</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for slot in bookings %}
+            <tr>
+              <td>{{ slot.time }}</td>
+              <td>{{ slot.booked_by }}</td>
+              <td>{{ slot.date }}</td>
+              <td><span class="status">Confirmed</span></td>
+              <td>
+                <form action="{% url 'cancel_booking' slot.id %}" method="post" style="margin:0;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger" style="padding:8px 12px;">Cancel</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" style="text-align:center;color:#6b7280;">No bookings yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
