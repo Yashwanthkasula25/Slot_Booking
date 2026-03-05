@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-)&4xx+(&j7f$i=c&$wv7))e8kdcjj96n4t2jftwwt7r^!r*z5d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "slot-booking-oau0.onrender.com",
+    ".netlify.app"
+]
 
 
 # Application definition
@@ -37,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'booking'
+    'booking',
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware"
 ]
 
 ROOT_URLCONF = 'slotbooking.urls'
@@ -120,3 +125,4 @@ STATIC_URL = 'static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+CORS_ALLOW_ALL_ORIGINS = True
